@@ -1,11 +1,7 @@
 # GSTBench: A Benchmark Study on the Transferability of Graph Self-Supervised Learning
 
-This repository contains the implementation of our benchmark study on graph self-supervised learning (SSL) methods. The codebase supports pretraining on large-scale graph datasets and evaluating the transferability of pretrained models across various downstream tasks.
+This repository contains the implementation of our benchmark study on graph self-supervised learning (SSL) methods. The codebase supports pretraining on large-scale graph datasets and evaluating the transferability of pretrained models across various downstream datasets with different adaptation methods.
 
-## Basic Information
-- **Paper**: [GSTBench: A Benchmark Study on the Transferability of Graph Self-Supervised Learning](link_to_paper)
-- **Conference**: CIKM 2024
-- **Authors**: Anonymous
 
 ## Prerequisites
 Install the required packages using:
@@ -17,7 +13,7 @@ pip install -r requirements.txt
 ```
 .
 ├── data_utils/        # Data processing
-├── datasets/         # Dataset storage
+├── datasets/         # Downstream dataset storage
 ├── pretrain_model/   # SSL methods (GraphMAE, VGAE, DGI, GRACE, LP)
 ├── tasks/           # Downstream task storage
 ├── train_ssl.py     # Main training
@@ -51,7 +47,6 @@ pip install -r requirements.txt
 - **Implementation**: `pretrain_model/GRACE.py`
 
 ### 5. Link Prediction (LP)
-- **Paper**: [Link Prediction Based on Graph Neural Networks](https://arxiv.org/abs/1802.09691)
 - **Key Idea**: Predicts missing edges in the graph
 - **Implementation**: `pretrain_model/LP.py`
 
@@ -65,12 +60,10 @@ pip install -r requirements.txt
 ### 2. Fine-tuning
 - Updates all or selected layers of the pretrained model
 - Enables dataset-specific adaptation
-- Balances between transferability and task performance
 
 ### 3. Linear Probing
 - Trains a linear classifier on frozen representations
 - Evaluates the quality of learned representations
-- Measures representation transferability
 
 ## Usage
 
@@ -90,9 +83,9 @@ bash template_run.sh
 ### SSL Method Parameters
 | Method | Parameters | Description |
 |--------|------------|-------------|
-| GraphMAE | `alpha` | Masking ratio |
+| GraphMAE | `alpha` | Loss scaling factor |
 | | `p_node_mask` | Node masking probability |
-| VGAE/LP | `edge_batch_size` | Batch size for edge operations |
+| VGAE/LP | `edge_batch_size` | Batch size for edge sampling |
 | GRACE | `p_edge_drop` | Edge dropout probability |
 | | `p_feat_drop` | Feature dropout probability |
 | | `tau` | Temperature parameter |
@@ -102,18 +95,18 @@ bash template_run.sh
 |-----------|-------------|---------|
 | `encoder_name` | GNN architecture | 'GCN' or 'GAT' |
 | `norm` | Normalization type | 'none', 'batch', 'layer' |
-| `activation` | Activation function | 'relu', 'gelu', 'prelu' |
+| `activation` | Activation function | 'none', 'relu', 'elu', 'prelu' |
 | `use_residual` | Use residual connections | True/False |
 
 ### Training Parameters
 | Parameter | Description | Options |
 |-----------|-------------|---------|
 | `opt` | Optimizer | 'adam', 'adamw', 'sgd' |
-| `scheduler` | Learning rate schedule | 'constant', 'cosine' |
+| `scheduler` | Learning rate schedule | 'constant', 'cosine', 'polynomial' |
 | `warmup_steps` | Warmup steps | Integer |
 | `peak_lr` | Peak learning rate | Float |
 | `weight_decay` | Weight decay | Float |
-| `epochs` | Training epochs | Integer |
+| `epochs` | Pretraining epochs | Integer |
 
 ### Evaluation Parameters
 | Parameter | Description | Options |
